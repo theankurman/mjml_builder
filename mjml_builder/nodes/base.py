@@ -104,6 +104,16 @@ class BaseNode:
         ).decode()
         return output
 
+    @property
+    def text(self):
+        text = ""
+        if self.content:
+            text += self.content
+        else:
+            for child in self.children:
+                text += child.text + "\n"
+        return text
+
 
 class StemNode(BaseNode):
     def __init__(
