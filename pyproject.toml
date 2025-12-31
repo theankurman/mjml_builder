@@ -5,3 +5,9 @@ description = "MJML email builder"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = []
+
+[dependency-groups]
+dev = [
+    "ipykernel>=7.1.0",
+    "mrml>=0.2.0",
+]
