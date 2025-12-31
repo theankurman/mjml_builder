@@ -1,7 +1,6 @@
 import importlib
 import importlib.util
 import shutil
-from mjml_builder.nodes.containers import Body, Mjml
 
 
 class BaseNode:
@@ -26,12 +25,6 @@ class BaseNode:
     @property
     def mjml(self):
         node = self
-        # wrap current node with mjml and body if they aren't currently
-        if not isinstance(node, Mjml) and not isinstance(node, Body):
-            node = Body(node)
-        if not isinstance(node, Mjml):
-            node = Mjml(node)
-
         attribute_list = []
         for name, value in node.attributes.items():
             name = name.replace("_", "-")
