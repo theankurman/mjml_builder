@@ -25,6 +25,17 @@ class BaseNode:
         self.children = list(children)
 
     @property
+    def dict(self):
+        data = {}
+        data["tagName"] = self.tag_name
+        data["attributes"] = self.attributes
+        if self.content:
+            data["content"] = self.content
+        else:
+            data["children"] = [c.dict for c in self.children]
+        return data
+
+    @property
     def mjml(self):
         node = self
         attribute_list = []
