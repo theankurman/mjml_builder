@@ -1,6 +1,6 @@
-from .nodes.base import BaseNode
-from .nodes.containers import Body, Column, Mjml, Section
-from .nodes.elements import Text
+from .components.base import BaseComponent
+from .components.containers import Body, Column, Mjml, Section
+from .components.elements import Text
 
 
 class Builder:
@@ -30,8 +30,8 @@ class Builder:
         self.sections[-1].children.extend(new_columns)
         return self
 
-    def add_content(self, *contents: BaseNode | str, **attributes):
-        # if content is str, change to text node
+    def add_content(self, *contents: BaseComponent | str, **attributes):
+        # if content is str, change to text component
         new_contents = []
         for content in contents:
             if isinstance(content, str):
@@ -51,5 +51,5 @@ class Builder:
         return self
 
     def build(self):
-        # wrap sections in mjml and body and return node
+        # wrap sections in mjml and body and return component
         return Mjml(Body(*self.sections))

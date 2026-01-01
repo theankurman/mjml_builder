@@ -5,18 +5,18 @@ import shutil
 import subprocess
 
 
-class BaseNode:
+class BaseComponent:
     tag_name: str
 
     attributes: dict[str, str] = {}
     content: str | None = None
-    children: list["BaseNode"] = []
+    children: list["BaseComponent"] = []
 
     def __init__(
         self,
         tag_name: str,
         content: str | None = None,
-        *children: "BaseNode",
+        *children: "BaseComponent",
         **attributes: str,
     ) -> None:
         self.tag_name = tag_name
@@ -37,21 +37,21 @@ class BaseNode:
 
     @property
     def mjml(self):
-        node = self
+        component = self
         attribute_list = []
-        for name, value in node.attributes.items():
+        for name, value in component.attributes.items():
             name = name.replace("_", "-")
             attribute_list.append(f'{name}="{value}"')
         attribute_string = " ".join(attribute_list)
 
-        tag_start = "<" + f"{node.tag_name} {attribute_string}".strip() + ">"
-        tag_end = f"</{node.tag_name}>"
+        tag_start = "<" + f"{component.tag_name} {attribute_string}".strip() + ">"
+        tag_end = f"</{component.tag_name}>"
 
         content = ""
-        if node.content:
-            content += node.content
+        if component.content:
+            content += component.content
         else:
-            for child in node.children:
+            for child in component.children:
                 content += child.mjml
 
         markup = f"{tag_start}{content}{tag_end}"
@@ -61,12 +61,12 @@ class BaseNode:
     def html(self, force_external=False):
         from .containers import Mjml, Body
 
-        # wrap node with mjml and mj-body tags
-        node = self
-        if not isinstance(node, Mjml) and not isinstance(node, Body):
-            node = Body(node)
-        if not isinstance(node, Mjml):
-            node = Mjml(node)
+        # wrap component with mjml and mj-body tags
+        component = self
+        if not isinstance(component, Mjml) and not isinstance(component, Body):
+            component = Body(component)
+        if not isinstance(component, Mjml):
+            component = Mjml(component)
 
         # python implementation
         has_mrml_python = importlib.util.find_spec("mrml") is not None
@@ -80,11 +80,11 @@ class BaseNode:
         if has_mrml_python and not force_external:
             import mrml  # type: ignore
 
-            return mrml.to_html(node.mjml).content
+            return mrml.to_html(component.mjml).content
         if has_mjml_python and not force_external:
             import mjml  # type: ignore
 
-            return mjml.mjml_to_html(io.StringIO(node.mjml)).html
+            return mjml.mjml_to_html(io.StringIO(component.mjml)).html
 
         if has_mjml:
             mjml_command = []
@@ -100,7 +100,7 @@ class BaseNode:
         mjml_command += ["mjml", "--stdin", "--stdout"]
         output = subprocess.check_output(
             mjml_command,
-            input=node.mjml.encode(),
+            input=component.mjml.encode(),
         ).decode()
         return output
 
@@ -115,17 +115,17 @@ class BaseNode:
         return text
 
 
-class StemNode(BaseNode):
+class StemComponent(BaseComponent):
     def __init__(
         self,
-        *children: BaseNode,
+        *children: BaseComponent,
         **attributes: str,
     ) -> None:
         self.children = list(children)
         self.attributes = attributes
 
 
-class LeafNode(BaseNode):
+class LeafComponent(BaseComponent):
     def __init__(
         self,
         content: str | None = None,
