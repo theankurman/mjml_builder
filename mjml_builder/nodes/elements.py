@@ -1,3 +1,4 @@
+from mjml_builder.nodes.base import BaseNode
 from .base import StemNode, LeafNode
 
 
@@ -116,3 +117,36 @@ class Table(LeafNode):
         final_string = f"{headings_string}\n{border_string}\n{data_string}"
 
         return final_string
+
+
+class AccordionText(LeafNode):
+    tag_name = "mj-accordion-text"
+
+
+class AccordionTitle(LeafNode):
+    tag_name = "mj-accordion-title"
+
+
+class AccordionElement(StemNode):
+    tag_name = "mj-accordion-element"
+
+    def __init__(
+        self,
+        title: str,
+        text: str,
+        title_attributes: dict[str, str] = {},
+        text_attributes: dict[str, str] = {},
+        **attributes: str,
+    ) -> None:
+        super().__init__(
+            AccordionTitle(title, **title_attributes),
+            AccordionText(text, **text_attributes),
+            **attributes,
+        )
+
+
+class Accordion(StemNode):
+    tag_name = "mj-accordion"
+
+    def __init__(self, *children: AccordionElement, **attributes: str) -> None:
+        super().__init__(*children, **attributes)
