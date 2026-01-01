@@ -1,4 +1,5 @@
 from mjml_builder.nodes.base import BaseNode
+from mjml_builder.nodes.containers import Column, Section
 from .base import StemNode, LeafNode
 
 
@@ -149,4 +150,62 @@ class Accordion(StemNode):
     tag_name = "mj-accordion"
 
     def __init__(self, *children: AccordionElement, **attributes: str) -> None:
+        super().__init__(*children, **attributes)
+
+
+class CarouselImage(LeafNode):
+    tag_name = "mj-carousel-image"
+
+    def __init__(self, src: str, **attributes: str) -> None:
+        super().__init__(None, src=src, **attributes)
+
+
+class Carousel(StemNode):
+    tag_name = "mj-carousel"
+
+    def __init__(self, *children: CarouselImage, **attributes: str) -> None:
+        super().__init__(*children, **attributes)
+
+
+class Group(StemNode):
+    tag_name = "mj-group"
+
+    def __init__(self, *children: Column, **attributes: str) -> None:
+        super().__init__(*children, **attributes)
+
+
+class Hero(StemNode):
+    tag_name = "mj-hero"
+
+
+class NavbarLink(LeafNode):
+    tag_name = "mj-navbar-link"
+
+
+class Navbar(StemNode):
+    tag_name = "mj-navbar"
+
+    def __init__(self, *children: NavbarLink, **attributes: str) -> None:
+        super().__init__(*children, **attributes)
+
+
+class Raw(LeafNode):
+    tag_name = "mj-raw"
+
+
+class SocialElement(LeafNode):
+    tag_name = "mj-social-element"
+
+
+class Social(StemNode):
+    tag_name = "mj-social"
+
+    def __init__(self, *children: SocialElement, **attributes: str) -> None:
+        super().__init__(*children, **attributes)
+
+
+class Wrapper(StemNode):
+    tag_name = "mj-wrapper"
+
+    def __init__(self, *children: Section, **attributes: str) -> None:
         super().__init__(*children, **attributes)
