@@ -4,6 +4,16 @@ from .base import StemNode, LeafNode
 class Button(LeafNode):
     tag_name = "mj-button"
 
+    @property
+    def text(self):
+        label = self.content
+        link = self.attributes.get("href")
+        if not link:
+            if label:
+                return label
+            return ""
+        return f"[{label}]({link})"
+
 
 class Divider(LeafNode):
     tag_name = "mj-divider"
