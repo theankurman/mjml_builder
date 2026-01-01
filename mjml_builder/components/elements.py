@@ -2,6 +2,39 @@ from .containers import Column, Section
 from .base import StemComponent, LeafComponent
 
 
+class AccordionText(LeafComponent):
+    tag_name = "mj-accordion-text"
+
+
+class AccordionTitle(LeafComponent):
+    tag_name = "mj-accordion-title"
+
+
+class AccordionElement(StemComponent):
+    tag_name = "mj-accordion-element"
+
+    def __init__(
+        self,
+        title: str,
+        text: str,
+        title_attributes: dict[str, str] = {},
+        text_attributes: dict[str, str] = {},
+        **attributes: str,
+    ) -> None:
+        super().__init__(
+            AccordionTitle(title, **title_attributes),
+            AccordionText(text, **text_attributes),
+            **attributes,
+        )
+
+
+class Accordion(StemComponent):
+    tag_name = "mj-accordion"
+
+    def __init__(self, *children: AccordionElement, **attributes: str) -> None:
+        super().__init__(*children, **attributes)
+
+
 class Button(LeafComponent):
     tag_name = "mj-button"
 
@@ -16,8 +49,33 @@ class Button(LeafComponent):
         return f"[{label}]({link})"
 
 
+class CarouselImage(LeafComponent):
+    tag_name = "mj-carousel-image"
+
+    def __init__(self, src: str, **attributes: str) -> None:
+        super().__init__(None, src=src, **attributes)
+
+
+class Carousel(StemComponent):
+    tag_name = "mj-carousel"
+
+    def __init__(self, *children: CarouselImage, **attributes: str) -> None:
+        super().__init__(*children, **attributes)
+
+
 class Divider(LeafComponent):
     tag_name = "mj-divider"
+
+
+class Group(StemComponent):
+    tag_name = "mj-group"
+
+    def __init__(self, *children: Column, **attributes: str) -> None:
+        super().__init__(*children, **attributes)
+
+
+class Hero(StemComponent):
+    tag_name = "mj-hero"
 
 
 class Image(LeafComponent):
@@ -27,15 +85,37 @@ class Image(LeafComponent):
         super().__init__(src=src, **attributes)
 
 
+class NavbarLink(LeafComponent):
+    tag_name = "mj-navbar-link"
+
+
+class Navbar(StemComponent):
+    tag_name = "mj-navbar"
+
+    def __init__(self, *children: NavbarLink, **attributes: str) -> None:
+        super().__init__(*children, **attributes)
+
+
+class Raw(LeafComponent):
+    tag_name = "mj-raw"
+
+
+class SocialElement(LeafComponent):
+    tag_name = "mj-social-element"
+
+
+class Social(StemComponent):
+    tag_name = "mj-social"
+
+    def __init__(self, *children: SocialElement, **attributes: str) -> None:
+        super().__init__(*children, **attributes)
+
+
 class Spacer(LeafComponent):
     tag_name = "mj-spacer"
 
     def __init__(self, height: str = "10px", **attributes: str) -> None:
         super().__init__(height=height, **attributes)
-
-
-class Text(LeafComponent):
-    tag_name = "mj-text"
 
 
 class Table(LeafComponent):
@@ -119,88 +199,8 @@ class Table(LeafComponent):
         return final_string
 
 
-class AccordionText(LeafComponent):
-    tag_name = "mj-accordion-text"
-
-
-class AccordionTitle(LeafComponent):
-    tag_name = "mj-accordion-title"
-
-
-class AccordionElement(StemComponent):
-    tag_name = "mj-accordion-element"
-
-    def __init__(
-        self,
-        title: str,
-        text: str,
-        title_attributes: dict[str, str] = {},
-        text_attributes: dict[str, str] = {},
-        **attributes: str,
-    ) -> None:
-        super().__init__(
-            AccordionTitle(title, **title_attributes),
-            AccordionText(text, **text_attributes),
-            **attributes,
-        )
-
-
-class Accordion(StemComponent):
-    tag_name = "mj-accordion"
-
-    def __init__(self, *children: AccordionElement, **attributes: str) -> None:
-        super().__init__(*children, **attributes)
-
-
-class CarouselImage(LeafComponent):
-    tag_name = "mj-carousel-image"
-
-    def __init__(self, src: str, **attributes: str) -> None:
-        super().__init__(None, src=src, **attributes)
-
-
-class Carousel(StemComponent):
-    tag_name = "mj-carousel"
-
-    def __init__(self, *children: CarouselImage, **attributes: str) -> None:
-        super().__init__(*children, **attributes)
-
-
-class Group(StemComponent):
-    tag_name = "mj-group"
-
-    def __init__(self, *children: Column, **attributes: str) -> None:
-        super().__init__(*children, **attributes)
-
-
-class Hero(StemComponent):
-    tag_name = "mj-hero"
-
-
-class NavbarLink(LeafComponent):
-    tag_name = "mj-navbar-link"
-
-
-class Navbar(StemComponent):
-    tag_name = "mj-navbar"
-
-    def __init__(self, *children: NavbarLink, **attributes: str) -> None:
-        super().__init__(*children, **attributes)
-
-
-class Raw(LeafComponent):
-    tag_name = "mj-raw"
-
-
-class SocialElement(LeafComponent):
-    tag_name = "mj-social-element"
-
-
-class Social(StemComponent):
-    tag_name = "mj-social"
-
-    def __init__(self, *children: SocialElement, **attributes: str) -> None:
-        super().__init__(*children, **attributes)
+class Text(LeafComponent):
+    tag_name = "mj-text"
 
 
 class Wrapper(StemComponent):
