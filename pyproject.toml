@@ -1,13 +1,32 @@
+[build-system]
+requires = ["uv_build>=0.9.21,<0.10.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name="mjml_builder"
+module-root=""
+
 [project]
 name = "mjml-builder"
-version = "0.1.0"
+version = "0.1.1"
 description = "MJML email builder"
 readme = "README.md"
 requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
 dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/theankurman/mjml_builder"
 
 [dependency-groups]
 dev = [
     "ipykernel>=7.1.0",
     "mrml>=0.2.0",
 ]
+
+
