@@ -3,9 +3,15 @@ import importlib.util
 import io
 import shutil
 import subprocess
+from typing import override
 
 
 class BaseComponent:
+    """Represents a generic mjml tag.
+
+    Prefer to inherit this class instead of using it directly.
+    """
+
     tag_name: str
 
     attributes: dict[str, str] = {}
@@ -19,6 +25,14 @@ class BaseComponent:
         *children: "BaseComponent",
         **attributes: str,
     ) -> None:
+        """Create an instance of this component.
+
+        Args:
+            tag_name (str): the name of the tag. Example ``mj-text``.
+            content (str | None, optional): the content of an "ending" tag. Defaults to None.
+            *children (BaseComponent): list of child components, provided as positional args.
+            **attributes (str): list of attributes to apply to this tag, provided as keyword args.
+        """
         self.tag_name = tag_name
         self.attributes = attributes
         self.content = content
@@ -26,6 +40,7 @@ class BaseComponent:
 
     @property
     def dict(self):
+        """Get a dict representation of this component."""
         data = {}
         data["tagName"] = self.tag_name
         data["attributes"] = self.attributes
@@ -37,6 +52,7 @@ class BaseComponent:
 
     @property
     def mjml(self):
+        """Get a mjml markup representation of this component."""
         component = self
         attribute_list = []
         for name, value in component.attributes.items():
@@ -59,6 +75,7 @@ class BaseComponent:
 
     @property
     def html(self, force_external=False):
+        """Get a html representation of this component."""
         from .containers import Mjml, Body
 
         # wrap component with mjml and mj-body tags
@@ -106,6 +123,7 @@ class BaseComponent:
 
     @property
     def text(self):
+        """Get a text representation of this component."""
         text = ""
         if self.content:
             text += self.content
@@ -116,20 +134,50 @@ class BaseComponent:
 
 
 class StemComponent(BaseComponent):
+    """Represents a mjml tag that has other mjml tags as children.
+
+    Attributes:
+        tag_name (str): The name of the mjml tag. Example ``mj-column``.
+        children (list[`BaseComponent`]): List of child components.
+        attributes (dict[str, str]): attributes to apply to the mjml tag.
+    """
+
+    @override
     def __init__(
         self,
         *children: BaseComponent,
         **attributes: str,
     ) -> None:
+        """Create an instance of this class.
+
+        Args:
+            *children: list of child components of this tag, provided as positional args.
+            **attributes: attributes to apply to the mjml tag, provided as kwargs.
+        """
         self.children = list(children)
         self.attributes = attributes
 
 
 class LeafComponent(BaseComponent):
+    """Represents an "ending" mjml tag that may not contain other mjml tags as children.
+
+    Attributes:
+        tag_name (str): name of the mjml tag, Example: ``mj-text``
+        content (str): inner html content of the tag.
+        attributes (dict[str, str]): attributes to apply to the mjml tag.
+    """
+
+    @override
     def __init__(
         self,
         content: str | None = None,
         **attributes: str,
     ) -> None:
+        """Create an instance of this class.
+
+        Args:
+            content: inner html content of this tag. Defaults to None.
+            **attributes: attributes to apply to the mjml tag, provided as kwargs.
+        """
         self.content = content
         self.attributes = attributes
