@@ -15,6 +15,16 @@ class Builder:
     def __init__(self) -> None:
         self.sections = []
 
+    def add_builder(self, builder: "Builder"):
+        """Add the sections from another builder to this one.
+
+        Args:
+            builder: the builder whose sections to add to this one.
+        """
+
+        self.sections.extend(builder.sections)
+        return self
+
     def add_section(self, *sections: Section, **attributes: str):
         """Add the given sections to the builder.
 
