@@ -55,11 +55,11 @@ class Builder:
         self.sections[-1].children.extend(new_columns)
         return self
 
-    def add_content(self, *contents: BaseComponent | str, **attributes):
+    def add_content(self, content: BaseComponent | str, **attributes):
         """Add content to the last column in the last section in the builder.
 
         Args:
-            *contents: A list of contents to add to the column, provided as positional args.
+            content: The content to add.
 
                 - If an instance of :class:`BaseComponent`, it is added as is.
                 - If an instance of :class:`str`, it is wrapped with a :class:`Text`
@@ -68,11 +68,9 @@ class Builder:
             **attributes: attributes to apply to the :class:`Text` tag when a string is passed in as content.
         """
         # if content is str, change to text component
-        new_contents = []
-        for content in contents:
-            if isinstance(content, str):
-                content = Text(content, **attributes)
-            new_contents.append(content)
+
+        if isinstance(content, str):
+            content = Text(content, **attributes)
 
         # create section and column if not exists
         if not self.sections:
@@ -82,7 +80,7 @@ class Builder:
             self.add_column()
 
         # add new content to the last column in the last section
-        self.sections[-1].children[-1].children.extend(new_contents)
+        self.sections[-1].children[-1].children.append(content)
 
         return self
 
